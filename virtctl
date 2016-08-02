@@ -1,0 +1,42 @@
+
+if ${DEBUG:-false}; then
+  set -x
+else
+  alias curl="curl -q"
+fi
+
+unset http_proxy
+export CTLADDR=10.0.0.173:8084
+
+call() {
+  curl http://$CTLADDR/v1/domains/$@
+}
+
+list() {
+  call | jq ""
+}
+
+create() {
+  call $1 -X PUT --data @$( find domxmls -name $1 )
+}
+
+delete() {
+  call $1 -X DELETE
+}
+
+get() {
+  call $1
+}
+
+uri() {
+  call $1/connection/uri
+}
+
+whatis() {
+  get() { kubectl get -o json $@ ; }
+  get svc libvirt-$1
+  get rc compute-rc-$1
+}
+
+${@:-list}
+

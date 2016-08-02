@@ -68,6 +68,12 @@ kubectl create -f specs/controller-service.json
 sleep 10 # Wait for the services to get an IP
 kubectl create -f specs/controller-pod.json
 kubectl create -f specs/ovirt-engine-pod.json
+
+# To debug: export DEBUG=true
+./virtctl create generic-pxe
+./virtctl list
+./virtctl whatis generic-pxe
+./virtctl delete generic-pxe
 ```
 
 Access the engine with
